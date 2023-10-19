@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from flask import Flask, request, make_response, jsonify,session
+from flask import Flask, request, make_response, jsonify, session
 from flask_cors import CORS
 from flask_migrate import Migrate
 # Standard library imports
@@ -23,7 +23,7 @@ app.secret_key = b"Y\xf1Xz\x00\xad|eQ\x80t \xca\x1a\x10K"
 
 bcrypt = Bcrypt(app)
 
-CORS(app)
+CORS(app, resources='*')
 migrate = Migrate(app, db)
 
 db.init_app(app)
@@ -119,11 +119,11 @@ def get_order():
         return {"error": "not authorized"}, 401
 
 
-@app.get("/products/<int:id>")
-def get_products(id):
-    product = db.session.get(Product, id)
-    product_dict = product.to_dict(rules=("-orders",))
-    return make_response(jsonify(product_dict), 200)
+@app.get("/products")
+def get_products():
+    products = Product.query.all()
+    data =  [product.to_dict() for product in products]
+    return make_response(jsonify(data), 200)
 
 @app.patch("/products/<int:id>")
 def patch_products(id):

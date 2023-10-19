@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Route, Routes, Link } from "react-router-dom";
+import { Route, Link } from "react-router-dom";
 import { BrowserRouter } from "react-router-dom";
 import LogIn from "./Login";
 import ShoppingCart from "./ShoppingCart";
 import StoreList from "./StoreList";
 import Signup from "./Signup";
+import { Switch } from "react-router-dom/cjs/react-router-dom.min";
 
 function App() {
   const [cart, setCart] = useState([]);
@@ -13,7 +14,7 @@ function App() {
   useEffect (() => {
     fetch('/products')
     .then(res => res.json())
-    .then(carsData => setAllprod(carsData))
+    .then(carsData =>{ console.log(carsData);setAllprod(carsData)})
   },[])
 
   function addToCart(item) {
@@ -44,12 +45,12 @@ function App() {
           </ul>
         </nav>
 
-        <Routes>
+        <Switch>
           <Route path="/" element={<LogIn  />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/shopping-cart" element={<ShoppingCart cart={cart} onRemoveItem={removeItemFromCart} />} />
           <Route path="/store-list" element={<StoreList cart={cart} addToCart={addToCart} allprod={allprod}/>} />
-        </Routes>
+        </Switch>
       </BrowserRouter>
     </div>
   );
