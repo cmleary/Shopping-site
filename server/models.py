@@ -24,15 +24,15 @@ class User(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String, unique=True)
-    #password_digest = db.Column(db.String)
+    password_digest = db.Column(db.String)
 
     order_list = db.relationship("Order", back_populates="users", cascade="all, delete-orphan")
 
-    # def __repr__(self):
-    #     return f'<User id="{self.id}" username="{self.username}">'
+    def __repr__(self):
+        return f'<User id="{self.id}" username="{self.username}">'
 
-    # def to_dict(self):
-    #     return {"id": self.id, "username": self.username}
+    def to_dict(self):
+        return {"id": self.id, "username": self.username}
 
 
 class Order(db.Model, SerializerMixin):
@@ -87,5 +87,5 @@ class Product(db.Model, SerializerMixin):
     orders = association_proxy("order_products", "order_object")
 
 
-    # def to_dict(self):
-    #     return {"id": self.id, "name": self.name, "price": self.price, "image_url": self.image_url}
+    def to_dict(self):
+        return {"id": self.id, "name": self.name, "price": self.price, "image_url": self.image_url}

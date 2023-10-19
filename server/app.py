@@ -34,47 +34,70 @@ db.init_app(app)
 def index():
     return 'the stuff'
 
-# @app.post("/users")
-# def create_user():
-#     json = request.json
+@app.post("/users")
+def create_user():
+    json = request.json
 
-#     password_digest = bcrypt.generate_password_hash(json["password"]).decode("utf-8")
+    password_digest = bcrypt.generate_password_hash(json["password"]).decode("utf-8")
 
-#     new_user = User(username=json["username"], password_digest=password_digest)
-#     db.session.add(new_user)
-#     db.session.commit()
-#     session["user_id"] = new_user.id
-#     return new_user.to_dict(), 201
+    new_user = User(username=json["username"], password_digest=password_digest)
+    db.session.add(new_user)
+    db.session.commit()
+    session["user_id"] = new_user.id
+    return new_user.to_dict(), 201
 
 
 # SESSION LOGIN/LOGOUT#
 
 
-# @app.post("/login")
-# def login():
-#     json = request.json
-#     user = User.query.filter(User.username == json["username"]).first()
+@app.post("/login")
+def login():
+    json = request.json
+    user = User.query.filter(User.username == json["username"]).first()
 
-#     if user and bcrypt.check_password_hash(user.password_digest, json["password"]):
-#         session["user_id"] = user.id
-#         return user.to_dict(), 200
-#     else:
-#         return {"error": "Invalid username or password"}, 401
-
-
-# @app.get("/check_session")
-# def check_session():
-#     user = User.query.filter(User.id == session.get("user_id")).first()
-#     if user:
-#         return user.to_dict(), 200
-#     else:
-#         return {"message": "No user logged in"}, 401
+    if user and bcrypt.check_password_hash(user.password_digest, json["password"]):
+        session["user_id"] = user.id
+        return user.to_dict(), 200
+    else:
+        return {"error": "Invalid username or password"}, 401
 
 
-# @app.delete("/logout")
-# def logout():
-#     session.pop("user_id")
-#     return {"message": "Logged out"}, 200
+@app.get("/check_session")
+def check_session():
+    user = User.query.filter(User.id == session.get("user_id")).first()
+    if user:
+        return user.to_dict(), 200
+    else:
+        return {"message": "No user logged in"}, 401
+
+
+@app.delete("/logout")
+def logout():
+    session.pop("user_id")
+    return {"message": "Logged out"}, 200
+
+
+# EXAMPLE OTHER RESOURCES WITH AUTH #
+
+
+@app.get("/films")
+def get_cartoons():
+    if db.session.get(User, session.get("user_id")):
+        return [
+            {"id": 1, "name": "Fateful Findings"},
+            {"id": 2, "name": "Twisted Pair"},
+            {"id": 3, "name": "Double Down"},
+        ], 200
+    else:
+        return {"error": "not authorized"}, 401
+
+
+# APP RUN #
+
+if __name__ == "__main__":
+    app.run(port=5555, debug=True)
+
+
 
 
 @app.get("/users")
@@ -93,9 +116,6 @@ def get_user_by_id(id):
     return make_response(jsonify(user_dict), 200)
 
 
-
-
-
 @app.get("/orders")
 def get_order():
     order = Order.query.filter(Order.id == session.get("user_id")).first()
@@ -108,9 +128,7 @@ def get_order():
 @app.get("/products/<int:id>")
 def get_products(id):
     product = db.session.get(Product, id)
-    users = [d.to_dict(rules=("-orders",)) for d in product.users]
     product_dict = product.to_dict(rules=("-orders",))
-    product_dict["users"] = users
     return make_response(jsonify(product_dict), 200)
 
 @app.patch("/products/<int:id>")
