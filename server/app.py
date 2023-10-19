@@ -80,22 +80,16 @@ def logout():
 # EXAMPLE OTHER RESOURCES WITH AUTH #
 
 
-@app.get("/films")
-def get_cartoons():
-    if db.session.get(User, session.get("user_id")):
-        return [
-            {"id": 1, "name": "Fateful Findings"},
-            {"id": 2, "name": "Twisted Pair"},
-            {"id": 3, "name": "Double Down"},
-        ], 200
-    else:
-        return {"error": "not authorized"}, 401
-
-
-# APP RUN #
-
-if __name__ == "__main__":
-    app.run(port=5555, debug=True)
+# @app.get("/films")
+# def get_cartoons():
+#     if db.session.get(User, session.get("user_id")):
+#         return [
+#             {"id": 1, "name": "Fateful Findings"},
+#             {"id": 2, "name": "Twisted Pair"},
+#             {"id": 3, "name": "Double Down"},
+#         ], 200
+#     else:
+#         return {"error": "not authorized"}, 401
 
 
 
