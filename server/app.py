@@ -94,8 +94,10 @@ def get_user_by_id(id):
 
 
 
+
+
 @app.get("/orders")
-def get_cart():
+def get_order():
     order = Order.query.filter(Order.id == session.get("user_id")).first()
     if db.session.get(User, session.get("user_id")):
         return {"total": order.total_price()}, 200
@@ -106,8 +108,8 @@ def get_cart():
 @app.get("/products/<int:id>")
 def get_products(id):
     product = db.session.get(Product, id)
-    users = [d.to_dict(rules=("-carts",)) for d in product.users]
-    product_dict = product.to_dict(rules=("-carts",))
+    users = [d.to_dict(rules=("-orders",)) for d in product.users]
+    product_dict = product.to_dict(rules=("-orders",))
     product_dict["users"] = users
     return make_response(jsonify(product_dict), 200)
 
