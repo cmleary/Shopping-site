@@ -9,23 +9,7 @@ function Signup({ attemptSignup }) {
 
     function handleSubmit(e) {
         e.preventDefault();
-
-        const user = { username, password };
-
-        fetch("/users", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(user),
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                attemptSignup(data);
-            })
-            .catch((error) => {
-                console.error("Error signing up:", error);
-            });
+        attemptSignup({ username, password });
     }
 
     return (

@@ -5,3 +5,8 @@
   --text: hsla(0, 0%, 100%, 0.88);
 }
 
+img {
+  width: 150px;
+  border-radius: 15px;
+}
+

@@ -1,6 +1,24 @@
 import React from "react";
 
-function ShoppingCart({ cart, onRemoveItem }) {
+function ShoppingCart({ cart, onRemoveItem, setCurrentUser }) {
+
+  
+
+  function order(cart) {
+    fetch("/orders", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Accepts: "application/json",
+        },
+        body: JSON.stringify(cart),
+    })
+        .then((res) => res.json())
+        .then((data) => setCurrentUser(data));
+}
+
+
+ 
   return (
     <div>
       <h1>Shopping Cart</h1>
@@ -14,6 +32,7 @@ function ShoppingCart({ cart, onRemoveItem }) {
             </li>
           ))}
         </ul>
+        <button onClick={() => order(cart)}>Order</button>
       </div>
     </div>
   );

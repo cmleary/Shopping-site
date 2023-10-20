@@ -9,24 +9,23 @@ function Login({ attemptLogin }) {
 
     function handleSubmit(e) {
         e.preventDefault();
+        attemptLogin({ username, password });
 
+        // const user = { username, password };
 
-        const user = { username, password };
-
-        fetch("/login", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(user),
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                attemptLogin(data);
-            })
-            .catch((error) => {
-                console.error("Error logging in:", error);
-            });
+        // fetch("/login", {
+        //     method: "POST",
+        //     headers: {
+        //         "Content-Type": "application/json",
+        //     },
+        //     body: JSON.stringify(user),
+        // })
+        //     .then((response) => response.json())
+        //     .then((data) => {attemptLogin(data);
+        //     })
+        //     .catch((error) => {
+        //         console.error("Error logging in:", error);
+        //     });
     }
 
     return (
